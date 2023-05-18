@@ -2,23 +2,21 @@ import cv2
 import numpy as np
 
 
-def low_pass_filter(img, kernel_size):
+def low_pass_filter(img):
     sigma_x = 0
     sigma_y = 0
+    kernel_size = 43
     kernel_size = (kernel_size, kernel_size)
     return cv2.GaussianBlur(img, kernel_size, sigmaX=sigma_x, sigmaY=sigma_y)
 
 
-def high_pass_filter(img, kernel_size):
-    low_frequencies = low_pass_filter(img, kernel_size)
-    return np.subtract(img, low_frequencies) + 127
+def high_pass_filter(img):
+    low_frequencies = low_pass_filter(img)
+    return cv2.subtract(img, low_frequencies)
 
 
 def merge_frequencies(low_f, high_f):
-    gamma = -127
-    weight_low_f = 1
-    weight_high_f = 1
-    return cv2.addWeighted(low_f, weight_low_f, high_f, weight_high_f, gamma)
+    return cv2.add(low_f, high_f)
 
 
 def show_image(img):
@@ -49,9 +47,8 @@ def main():
     img_1 = cv2.imread('data/images/angry_man.png', cv2.IMREAD_COLOR)
     img_2 = cv2.imread('data/images/woman.png', cv2.IMREAD_COLOR)
 
-    kernel_size = 33
-    low_frequencies = low_pass_filter(img_1, kernel_size)
-    high_frequencies = high_pass_filter(img_2, kernel_size)
+    low_frequencies = low_pass_filter(img_1)
+    high_frequencies = high_pass_filter(img_2)
 
     hybrid_image = merge_frequencies(low_frequencies, high_frequencies)
     show_image(hybrid_image)
