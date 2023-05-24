@@ -6,7 +6,7 @@ import numpy as np
 def low_pass_filter(img):
     sigma_x = 0
     sigma_y = 0
-    kernel_size = 43
+    kernel_size = 21
     kernel_size = (kernel_size, kernel_size)
     return cv2.GaussianBlur(img, kernel_size, sigmaX=sigma_x, sigmaY=sigma_y)
 
